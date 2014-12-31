@@ -65,7 +65,7 @@
         <Parent guid="guidMakeFriendAssemblyCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>MakeFriendAssembly</ButtonText>
+          <ButtonText>Make Friend Assembly</ButtonText>
         </Strings>
       </Button>
 
