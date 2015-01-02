@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
+using System.Windows.Interop;
+using DreamWorks.MakeFriendAssembly.View;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -15,6 +17,7 @@ namespace DreamWorks.MakeFriendAssembly
 	[Guid(GuidList.guidMakeFriendAssemblyPkgString)]
 	public sealed class MakeFriendAssemblyPackage : Package
 	{
+		private IVsUIShell _shell;
 		public MakeFriendAssemblyPackage()
 		{
 		}
@@ -29,26 +32,28 @@ namespace DreamWorks.MakeFriendAssembly
 				return;
 			var menuCommandID = new CommandID(GuidList.guidMakeFriendAssemblyCmdSet, (int)PkgCmdIDList.cmdidMakeFriendAssembly);
 			var menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+			_shell = (IVsUIShell)GetService(typeof(SVsUIShell));
 			mcs.AddCommand(menuItem);
 		}
 
 		private void MenuItemCallback(object sender, EventArgs e)
 		{
-			var uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-			Guid clsid = Guid.Empty;
-			int result;
-			ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
-				0,
-				ref clsid,
-				"MakeFriendAssembly",
-				string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", ToString()),
-				string.Empty,
-				0,
-				OLEMSGBUTTON.OLEMSGBUTTON_OK,
-				OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-				OLEMSGICON.OLEMSGICON_INFO,
-				0, // false
-				out result));
+			var resolveFileConflictDialog = new MakeFriendAssemblyDialog(new List<string>{"hi", "there", "good"});
+			SetModalDialogOwner(resolveFileConflictDialog);
+
+			var dlgResult = resolveFileConflictDialog.ShowDialog();
+			if (!dlgResult.HasValue || dlgResult != true)
+				return;
+			
+		}
+
+		public void SetModalDialogOwner(System.Windows.Window targetWindow)
+		{
+			IntPtr hWnd;
+			_shell.GetDialogOwnerHwnd(out hWnd);
+			// ReSharper disable once PossibleNullReferenceException
+			var parent = HwndSource.FromHwnd(hWnd).RootVisual;
+			targetWindow.Owner = (System.Windows.Window)parent;
 		}
 	}
 }
