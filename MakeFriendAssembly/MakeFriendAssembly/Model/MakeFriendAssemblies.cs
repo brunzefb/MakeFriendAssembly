@@ -31,6 +31,7 @@ namespace DreamWorks.MakeFriendAssembly.Model
 
 		public void Execute()
 		{
+			Logger.Info("MakeFriendAssemblies.Execute-Starts");
 			var friendshipGiverProjectPath = _data.SelectedGiver.Path;
 			var friendshipRequestorProjectPaths = new List<string>();
 			foreach (var s in _data.FriendRequestor)
@@ -45,8 +46,11 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			foreach (var requestor in friendshipRequestorProjectPaths)
 			{
 				var requestorProject = ProjectFromPath(requestor);
+				Logger.InfoFormat("MakeFriendAssemblies.Execute- Project:{0} gives access to project:{1}", 
+					friendshipGiverProjectPath, requestor);
 				MakeFriendAssembly(requestorProject, giverProject);
 			}
+			Logger.Info("MakeFriendAssemblies.Execute-Ends");
 		}
 
 		private void MakeFriendAssembly(Project friendshipRequestorProject, Project friendshipGiverProject)
@@ -55,11 +59,11 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			var fullPathToSnk = GetFullPathToSnkFile(friendshipRequestorProject);
 			if (!string.IsNullOrEmpty(fullPathToSnk))
 			{
-				Logger.InfoFormat("CreateProjectHelper.MakeFriendAssembly, fullPathToSnk={0}", fullPathToSnk);
+				Logger.InfoFormat("MakeFriendAssemblies.MakeFriendAssembly, fullPathToSnk={0}", fullPathToSnk);
 				var publicKeyAsString = Helper.PublicKeyFromSnkFile(fullPathToSnk);
 				if (string.IsNullOrEmpty(publicKeyAsString))
 				{
-					Logger.Info("CreateProjectHelper.MakeFriendAssembly - PublicKeyFromSnkFile (c++) failed");
+					Logger.Info("MakeFriendAssemblies.MakeFriendAssembly - PublicKeyFromSnkFile (c++) failed");
 					return;
 				}
 				string assemblyName = friendshipRequestorProject.Name;
@@ -72,7 +76,7 @@ namespace DreamWorks.MakeFriendAssembly.Model
 
 		private void PatchAssemblyInfoCsWithInternalsVisibleTo(Project friendshipGiverProject, string patchString)
 		{
-			Logger.InfoFormat("CreateProjectHelper.PatchAssemblyInfoCsWithInternalsVisibleTo, giverProject={0}", friendshipGiverProject.Name);
+			Logger.InfoFormat("MakeFriendAssemblies.PatchAssemblyInfoCsWithInternalsVisibleTo, giverProject={0}", friendshipGiverProject.Name);
 			Logger.InfoFormat("patchString={0}", patchString);
 
 			string fullPathToAssemblyInfoCs = string.Empty;
@@ -93,7 +97,7 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			if (string.IsNullOrEmpty(fullPathToAssemblyInfoCs))
 			{
 				Logger.Info(
-					"CreateProjectHelper.PatchAssemblyInfoCsWithInternalsVisibleTo, could not find path to AssemblyInfo.cs");
+					"MakeFriendAssemblies.PatchAssemblyInfoCsWithInternalsVisibleTo, could not find path to AssemblyInfo.cs");
 				return;
 			}
 			using (var sw = File.AppendText(fullPathToAssemblyInfoCs))
@@ -108,13 +112,13 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			var sourceProj = project.Object as VSProject2;
 			if (sourceProj == null)
 			{
-				Logger.Info("CreateProjectHelper.GetFullPathToSnkFile sourceProj is null");
+				Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile sourceProj is null");
 				return null;
 			}
 			var props = sourceProj.Project.Properties;
 			if (props == null)
 			{
-				Logger.Info("CreateProjectHelper.GetFullPathToSnkFile props is null");
+				Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile props is null");
 				return null;
 			}
 			var isSigned = props.Item(SignAssemblyPropertyName).Value as bool?;
@@ -123,25 +127,25 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			if (string.IsNullOrEmpty(projectDirectoryName) || string.IsNullOrEmpty(keyFile))
 			{
 				if (string.IsNullOrEmpty(keyFile))
-					Logger.Info("CreateProjectHelper.GetFullPathToSnkFile keyFile is null");
+					Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile keyFile is null");
 				else
-					Logger.Info("CreateProjectHelper.GetFullPathToSnkFile projectDirectory is null");
+					Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile projectDirectory is null");
 				return null;
 			}
-			Logger.InfoFormat("CreateProjectHelper.GetFullPathToSnkFile isSigned={0}, keyFile={1}, projectDirectoryName={2}",
+			Logger.InfoFormat("MakeFriendAssemblies.GetFullPathToSnkFile isSigned={0}, keyFile={1}, projectDirectoryName={2}",
 				isSigned, keyFile, projectDirectoryName);
 			string fullPathToSnk = Path.Combine(projectDirectoryName, keyFile);
 			if (!isSigned.HasValue || !isSigned.Value)
 			{
-				Logger.Info("CreateProjectHelper.GetFullPathToSnkFile not signed");
+				Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile not signed");
 				return null;
 			}
 			if (!File.Exists(fullPathToSnk))
 			{
-				Logger.Info("CreateProjectHelper.GetFullPathToSnkFile No key file (fullPathToSnk) on disk");
+				Logger.Info("MakeFriendAssemblies.GetFullPathToSnkFile No key file (fullPathToSnk) on disk");
 				return null;
 			}
-			Logger.InfoFormat("CreateProjectHelper.GetFullPathToSnkFile returning fullPathToSnk={0}", fullPathToSnk);
+			Logger.InfoFormat("MakeFriendAssemblies.GetFullPathToSnkFile returning fullPathToSnk={0}", fullPathToSnk);
 			return fullPathToSnk;
 		}
 

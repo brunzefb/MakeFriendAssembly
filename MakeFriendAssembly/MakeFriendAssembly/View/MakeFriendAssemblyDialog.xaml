@@ -43,7 +43,7 @@
 				   TextWrapping="Wrap"
 				   VerticalAlignment="Top"
 				   Grid.Column="1"
-				   Grid.Row="4"><Run Text="Select the project(s) that will be " /><Bold><Run Text="getting" /></Bold><Run Text=" internals access to the above project" /></TextBlock>
+				   Grid.Row="4"><Run Text="Select the checkboxes the project(s) that will be " /><Bold><Run Text="getting" /></Bold><Run Text=" internals access to the above project" /></TextBlock>
 		<ListBox VerticalAlignment="Stretch"
 				 HorizontalAlignment="Stretch"
 				 Grid.Column="1"

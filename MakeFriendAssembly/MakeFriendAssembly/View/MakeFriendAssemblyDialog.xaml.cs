@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using DreamWorks.MakeFriendAssembly.ViewModel;
 using DreamWorks.TddHelper.View;
 
@@ -27,6 +29,8 @@ namespace DreamWorks.MakeFriendAssembly.View
 		private void MakeFriendAssemblyDialog_OnLoaded(object sender, RoutedEventArgs e)
 		{
 			ViewModel.OnLoaded();
+			var image = new BitmapImage(new Uri("pack://application:,,,/MakeFriendAssembly;component/Resources/Package.ico", UriKind.Absolute));
+			this.Icon = image;
 		}
 	}
 }
