@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using DreamWorks.MakeFriendAssembly.ViewModel;
 using DreamWorks.TddHelper.View;
