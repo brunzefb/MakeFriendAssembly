@@ -21,6 +21,8 @@ namespace DreamWorks.MakeFriendAssembly.Model
 		private const string AssemblyOriginatorKeyFilePropertyName = "AssemblyOriginatorKeyFile";
 		private const string AssemblyInfoCsFile = "AssemblyInfo.cs";
 		private readonly DTE2 _dte;
+		private string _patchedAssemblyInfoCs;
+		private const string OpenFileCommand = "File.OpenFile";
 
 		public MakeFriendAssemblies(MakeFriendAssemblyViewModel viewModel, ProjectModel projectModel, DTE2 dte)
 		{
@@ -51,6 +53,15 @@ namespace DreamWorks.MakeFriendAssembly.Model
 				MakeFriendAssembly(requestorProject, giverProject);
 			}
 			Logger.Info("MakeFriendAssemblies.Execute-Ends");
+			if (!string.IsNullOrEmpty(_patchedAssemblyInfoCs))
+				_dte.ExecuteCommand(OpenFileCommand, Enquote(_patchedAssemblyInfoCs));
+		}
+
+		private static string Enquote(string sourcePath)
+		{
+			if (!sourcePath.Contains(" "))
+				return sourcePath;
+			return "\"" + sourcePath + "\"";
 		}
 
 		private void MakeFriendAssembly(Project friendshipRequestorProject, Project friendshipGiverProject)
@@ -98,6 +109,7 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			{
 				Logger.Info(
 					"MakeFriendAssemblies.PatchAssemblyInfoCsWithInternalsVisibleTo, could not find path to AssemblyInfo.cs");
+				_patchedAssemblyInfoCs = string.Empty;
 				return;
 			}
 			using (var sw = File.AppendText(fullPathToAssemblyInfoCs))
@@ -105,6 +117,7 @@ namespace DreamWorks.MakeFriendAssembly.Model
 				sw.WriteLine("\r\n");
 				sw.WriteLine(patchString);
 			}
+			_patchedAssemblyInfoCs = fullPathToAssemblyInfoCs;
 		}
 
 		private string GetFullPathToSnkFile(Project project)
