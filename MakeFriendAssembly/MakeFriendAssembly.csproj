@@ -169,7 +169,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
     <Compile Include="Utility\ExceptionLogHelper.cs" />
-    <Compile Include="Utility\FileOperationWrapper.cs" />
     <Compile Include="Utility\PathUtil.cs" />
     <Compile Include="Utility\RelativePathHelper.cs" />
     <Compile Include="ViewModel\MakeFriendAssemblyViewModel.cs" />
