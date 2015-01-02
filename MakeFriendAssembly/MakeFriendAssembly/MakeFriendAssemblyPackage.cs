@@ -134,5 +134,5 @@ namespace DreamWorks.MakeFriendAssembly
 			ExceptionLogHelper.LogException(ex);
 		}
 	}
-	}
+	
 }
