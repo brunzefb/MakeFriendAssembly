@@ -49,10 +49,10 @@ namespace DreamWorks.MakeFriendAssembly.Model
 			}
 		}
 
-		private void MakeFriendAssembly(Project requestorProject, Project friendshipGiverProject)
+		private void MakeFriendAssembly(Project friendshipRequestorProject, Project friendshipGiverProject)
 		{
 			string patchString;
-			var fullPathToSnk = GetFullPathToSnkFile(requestorProject);
+			var fullPathToSnk = GetFullPathToSnkFile(friendshipRequestorProject);
 			if (!string.IsNullOrEmpty(fullPathToSnk))
 			{
 				Logger.InfoFormat("CreateProjectHelper.MakeFriendAssembly, fullPathToSnk={0}", fullPathToSnk);
@@ -62,11 +62,11 @@ namespace DreamWorks.MakeFriendAssembly.Model
 					Logger.Info("CreateProjectHelper.MakeFriendAssembly - PublicKeyFromSnkFile (c++) failed");
 					return;
 				}
-				string assemblyName = friendshipGiverProject.Name;
+				string assemblyName = friendshipRequestorProject.Name;
 				patchString = GetInternalsVisibleToString(assemblyName, publicKeyAsString);
 			}
 			else
-				patchString = string.Format("[assembly: InternalsVisibleTo (\"{0}\")]", requestorProject.Name);
+				patchString = string.Format("[assembly: InternalsVisibleTo (\"{0}\")]", friendshipRequestorProject.Name);
 			PatchAssemblyInfoCsWithInternalsVisibleTo(friendshipGiverProject, patchString);
 		}
 

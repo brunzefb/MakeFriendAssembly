@@ -36,25 +36,26 @@ namespace DreamWorks.MakeFriendAssembly
 		{
 			Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", ToString()));
 			base.Initialize();
-
+			SetupLogging();
 			var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 			if (null == mcs) 
 				return;
 			
-			var menuCommandID = new CommandID(GuidList.guidMakeFriendAssemblyCmdSet, (int)PkgCmdIDList.cmdidMakeFriendAssembly);
-			var menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+			var menuCommandID = new CommandID(GuidList.guidMakeFriendAssemblyCmdSet, 
+				(int)PkgCmdIDList.cmdidMakeFriendAssembly);
+			var menuItem = new MenuCommand(MakeFriendsMenuCallback, menuCommandID);
 			_shell = (IVsUIShell)GetService(typeof(SVsUIShell));
 			mcs.AddCommand(menuItem);
 			var dte = (DTE2)GetService(typeof(DTE));
 			_projectModel = new ProjectModel(dte);
 		}
 
-		private void MenuItemCallback(object sender, EventArgs e)
+		private void MakeFriendsMenuCallback(object sender, EventArgs e)
 		{
 			var dte = (DTE2)GetService(typeof(DTE));
 			if (dte.Solution == null || !dte.Solution.IsOpen)
 			{
-				Logger.Warn("MenuItemCallback: No solution, aborting");
+				Logger.Warn("MakeFriendsMenuCallback: No solution, aborting");
 				Console.Beep();
 				return;
 			}
@@ -62,16 +63,21 @@ namespace DreamWorks.MakeFriendAssembly
 			_projectModel.GetCSharpFilesFromSolution();
 			if (_projectModel.ProjectPathsList.Count < 2)
 			{
-				Logger.Warn("MenuItemCallback: Less than 2 projects, aborting");
+				Logger.Warn("MakeFriendsMenuCallback: Less than 2 projects, aborting");
 				Console.Beep();
 				return;
 			}
-			var resolveFileConflictDialog = new MakeFriendAssemblyDialog(_projectModel.ProjectPathsList);
-			SetModalDialogOwner(resolveFileConflictDialog);
-			var dlgResult = resolveFileConflictDialog.ShowDialog();
+			var makeFriendAssemblyDlg = new MakeFriendAssemblyDialog(_projectModel.ProjectPathsList);
+			SetModalDialogOwner(makeFriendAssemblyDlg);
+			var dlgResult = makeFriendAssemblyDlg.ShowDialog();
 			if (!dlgResult.HasValue || dlgResult != true)
+			{
+				Logger.Warn("MakeFriendsMenuCallback: User cancelled dialog");
 				return;
-			
+			}
+			var viewModel = makeFriendAssemblyDlg.ViewModel;
+			var makeFriends = new MakeFriendAssemblies(viewModel, _projectModel, dte);
+			makeFriends.Execute();
 		}
 
 		public void SetModalDialogOwner(System.Windows.Window targetWindow)
@@ -116,10 +122,10 @@ namespace DreamWorks.MakeFriendAssembly
   </log4net>
 ";
 			var commonApps = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			var folder = Path.Combine(commonApps, @"TddHelper");
+			var folder = Path.Combine(commonApps, @"MakeFriendAssembly");
 			if (!Directory.Exists(folder))
 				Directory.CreateDirectory(folder);
-			string pathToLogfile = Path.Combine(folder, "TddHelper.log");
+			string pathToLogfile = Path.Combine(folder, "MakeFriendAssembly.log");
 			var logConfig = defaultLogConfigTemplate.Replace("{REPLACE}", pathToLogfile);
 			var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(logConfig));
 			log4net.Config.XmlConfigurator.Configure(stream);
@@ -134,5 +140,4 @@ namespace DreamWorks.MakeFriendAssembly
 			ExceptionLogHelper.LogException(ex);
 		}
 	}
-	
 }
