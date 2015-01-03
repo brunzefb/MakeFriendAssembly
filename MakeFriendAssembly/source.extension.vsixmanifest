@@ -1,9 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="92bace77-fb0d-44b2-bc4c-943893fc18c0" Version="1.0" Language="en-US" Publisher="DreamWorks" />
+    <Identity Id="92bace77-fb0d-44b2-bc4c-943893fc18c0" Version="1.0" Language="en-US" Publisher="Friedrich Brunzema" />
     <DisplayName>MakeFriendAssembly</DisplayName>
     <Description>Visual Studio 2013 Extension that easily allows establishing friendship relationship between c# projects</Description>
+    <MoreInfo>https://github.com/brunzefb/MakeFriendAssembly</MoreInfo>
+    <License>LICENSE</License>
+    <GettingStartedGuide>MakeFriendAssembly.docx</GettingStartedGuide>
+    <ReleaseNotes>MakeFriendAssembly.docx</ReleaseNotes>
+    <Icon>Package.ico</Icon>
+    <PreviewImage>Screenshot.png</PreviewImage>
+    <Tags>Friend Assemblies</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0]" />
