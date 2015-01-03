@@ -8,7 +8,7 @@
     <License>LICENSE</License>
     <GettingStartedGuide>MakeFriendAssembly.docx</GettingStartedGuide>
     <ReleaseNotes>MakeFriendAssembly.docx</ReleaseNotes>
-    <Icon>Package.ico</Icon>
+    <Icon>Resources\Package.ico</Icon>
     <PreviewImage>Screenshot.png</PreviewImage>
     <Tags>Friend Assemblies</Tags>
   </Metadata>
