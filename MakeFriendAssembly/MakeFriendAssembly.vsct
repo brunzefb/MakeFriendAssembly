@@ -35,7 +35,7 @@
   </Commands>
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidMakeFriendAssemblyPkg" value="{92bace77-fb0d-44b2-bc4c-943893fc18c0}" />
+    <GuidSymbol name="guidMakeFriendAssemblyPkg" value="{92bace77-fb0d-44b2-bc4c-943893fc18c1}" />
     
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidMakeFriendAssemblyCmdSet" value="{59933e76-236c-4368-83cf-c819108f1c50}">
