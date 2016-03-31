@@ -1,4 +1,4 @@
-[Oo]bj
+
 [Bb]in
 *.user
 *.suo
@@ -27,3 +27,7 @@ _ReSharper.*
 *.resharper
 BuildArtifacts/
 version.txt
+Debug
+Release
+ipch
+.vs
